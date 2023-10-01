@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Week 2 | Finding the Right Dataset – Improving Wildfire Prediction and Vegetation Recovery Modeling with Explainable AI – This is the project site for wildfire modeling by Bronte Sihan Li, MLS(ASCP). You can find project descriptions, documentation and useful links here. This site will be continuously updated throughout the duration of the project.</title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="This week, we will dive into the first step of the project: finding the right dataset. We will discuss the problem, potential solutions, and the dataset we will use for the project.
+
+" />
+    <meta property="og:description" content="This week, we will dive into the first step of the project: finding the right dataset. We will discuss the problem, potential solutions, and the dataset we will use for the project.
+
+" />
+    
+    <meta name="author" content="Improving Wildfire Prediction and Vegetation Recovery Modeling with Explainable AI" />
+
+    
+    <meta property="og:title" content="Week 2 | Finding the Right Dataset" />
+    <meta property="twitter:title" content="Week 2 | Finding the Right Dataset" />
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="Improving Wildfire Prediction and Vegetation Recovery Modeling with Explainable AI - This is the project site for wildfire modeling by Bronte Sihan Li, MLS(ASCP). You can find project descriptions, documentation and useful links here. This site will be continuously updated throughout the duration of the project." href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+  </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <a href="/" class="site-avatar"><img src="https://bronteee.github.io/images/headshot.JPG" /></a>
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">Improving Wildfire Prediction and Vegetation Recovery Modeling with Explainable AI</a></h1>
+            <p class="site-description">This is the project site for wildfire modeling by Bronte Sihan Li, MLS(ASCP). You can find project descriptions, documentation and useful links here. This site will be continuously updated throughout the duration of the project.</p>
+          </div>
+
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>Week 2 | Finding the Right Dataset</h1>
+
+  <div class="entry">
+    <p>This week, we will dive into the first step of the project: finding the right dataset. We will discuss the problem, potential solutions, and the dataset we will use for the project.</p>
+
+<p>For the first phase of the project, we focus on short-term predictions of wildfires. Concretely, this means that we will be predicting the spread of a wildfire, which is a critical task and a difficult problem where there can be many different approaches. However, solving this issue will contribute significantly to land management and fire disaster response efforts, providing useful insights for both emergency teams and individuals that may be in the vicinity of high risk areas.</p>
+
+<h2 id="the-dataset-we-will-use">The Dataset We Will Use</h2>
+<p>The next day wildfire dataset is a comprehensive compilation of wildfire data from the United States based on Google earth data from 2012 to 2020. It contains 2D information about 12 relevant variables including vegetation, elevation, weather, fire map at t day and fire mask at t+1 day. This dataset has the potential as a benchmark dataset for fire propagation prediction, while there have been few studies on this particular topic. The dataset is publicly available <a href="https://www.kaggle.com/datasets/fantineh/next-day-wildfire-spread">here</a>.</p>
+
+<p>Looking closer at the dataset this week, we were able to identify the specific shapes of the input and output:</p>
+
+<p>The input is a 3D tensor of shape (12, 64, 64), where the first dimension represents the 12 variables relevant to fire spread, the second and third dimensions represent the 64x64 grid of the area of interest. The output is a 2D tensor of shape (64, 64), where each pixel represents the presence of fire at that location.</p>
+
+<p>The visualization below is an example of the input and output for a given day, more details are available from the paper that introduced the dataset <a href="https://arxiv.org/abs/2112.02447">here</a>.</p>
+
+<p><img src="/images/data_vis.png" alt="Input and Output" /></p>
+
+<h2 id="augmenting-the-dataset">Augmenting the Dataset</h2>
+
+<p>Due to the drastic increase in number and frequency of wildfires in the last few years, we decided to augment the next day wildfire dataset be expanding its time and location range. We will be using the same 12 variables as the original dataset, but we will be using data from 2012 to 2023, and we will be expanding the area of interest to the entire North America. This will allow us to train a model that can generalize to a more recent time period and a larger area, which will be more useful for real-world applications in the context of this project.</p>
+
+<h2 id="the-problem">The problem</h2>
+
+<p>It is easy to see that the the prediction of the t+1 day fire mask can be framed as a segmentation problem, where the task is classification of each output pixel as either 0 or 1, where 0 means no fire and 1 means fire. However, the input is not a simple image, but a 3D tensor of shape (12, 64, 64). This means that we will need to find a way to transform the input into a 2D image, which we can then use to train a segmentation model.</p>
+
+<h2 id="potential-solutions">Potential Solutions</h2>
+
+<p>There are a number of potential solutions to this problem, and the original paper for this dataset explores a few of them, including employing both CNN based methods and LSTM based methods as well as using classical machine learning like random forests. While having results from these methods is useful, more sophisticated DNN architectures have not been used on this dataset, and we will start with a simple <a href="https://arxiv.org/abs/1505.04597">U-Net</a> to get a baseline for our project.</p>
+
+  </div>
+
+  <div class="date">
+    Written on September 18, 2023
+  </div>
+
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+<a href="mailto:li.siha [at] northeastern [dot] edu"><i class="svg-icon email"></i></a>
+
+
+
+
+<a href="https://www.linkedin.com/in/https://www.linkedin.com/in/brontesihanli/"><i class="svg-icon linkedin"></i></a>
+
+
+
+
+
+
+        </footer>
+      </div>
+    </div>
+
+  </body>
+</html>

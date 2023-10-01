@@ -18,9 +18,10 @@ html {
 }
 
 body {
-	background: $white;
-  font: 18px/1.4 $helvetica;
-  color: $darkGray;
+	// background: $white;
+  background-image: url("/images/background3.jpeg");
+  font: 18px/1.4 Georgia, serif;
+  color: darkslategray;
 }
 
 .container {
@@ -28,11 +29,12 @@ body {
   max-width: 740px;
   padding: 0 10px;
   width: 100%;
+  background-color: whitesmoke;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: $helveticaNeue;
-  color: $darkerGray;
+  font-family: Garamond, serif;
+  color: darkslategray;
   font-weight: bold;
 
   line-height: 1.7;
@@ -69,7 +71,7 @@ p {
 }
 
 a {
-  color: $blue;
+  color: lightblue;
   text-decoration: none;
 	cursor: pointer;
   &:hover, &:active {
@@ -122,11 +124,11 @@ img {
 
 // Specify the color of the selection
 ::-moz-selection {
-  color: $black;
+  color: darkslategray;
   background: $lightGray;
 }
 ::selection {
-  color: $black;
+  color: darkslategray;
   background: $lightGray;
 }
 
@@ -192,7 +194,7 @@ img {
 
 .site-name {
   margin: 0;
-  color: $darkGray;
+  color: darkslategrey;
   cursor: pointer;
   font-family: $helveticaNeue;
   font-weight: 300;
@@ -225,14 +227,14 @@ nav {
 
   a {
     margin-left: 20px;
-    color: $darkGray;
+    color: darkslategray;
     text-align: right;
     font-weight: 300;
     letter-spacing: 1px;
 
     @include mobile {
       margin: 0 10px;
-      color: $blue;
+      color: lightblue;
     }
   }
 }

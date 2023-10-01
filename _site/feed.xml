@@ -1,1 +1,80 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-09-07T19:37:37-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Improving Wildfire Prediction and Vegetation Recovery Modeling with Explainable AI</title><subtitle>This is the project site for wildfire modeling by Bronte Sihan Li, MLS(ASCP). You can find project descriptions, documentation and useful links here. This site will be continuously updated throughout the duration of the project.</subtitle><entry><title type="html">Week 1</title><link href="http://localhost:4000/week1/" rel="alternate" type="text/html" title="Week 1" /><published>2020-06-01T00:00:00-07:00</published><updated>2020-06-01T00:00:00-07:00</updated><id>http://localhost:4000/week1</id><content type="html" xml:base="http://localhost:4000/week1/">&lt;p&gt;Text here!&lt;/p&gt;</content><author><name></name></author><summary type="html">Text here!</summary></entry></feed>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-10-01T11:51:23-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Improving Wildfire Prediction and Vegetation Recovery Modeling with Explainable AI</title><subtitle>This is the project site for wildfire modeling by Bronte Sihan Li, MLS(ASCP). You can find project descriptions, documentation and useful links here. This site will be continuously updated throughout the duration of the project.</subtitle><entry><title type="html">Week 3 | Unet and Baseline Results</title><link href="http://localhost:4000/week3/" rel="alternate" type="text/html" title="Week 3 | Unet and Baseline Results" /><published>2023-09-25T00:00:00-07:00</published><updated>2023-09-25T00:00:00-07:00</updated><id>http://localhost:4000/week3</id><content type="html" xml:base="http://localhost:4000/week3/">&lt;p&gt;Now that we have our dataset ready, it is time to obtain some baseline results with the goal of 1/ evaluate the difficulty of the problem and 2/ determine if the problem is framed correctly. With that in mind, we will be using the Unet architecture as the starting architecture for this segmentation task.&lt;/p&gt;
+
+&lt;h2 id=&quot;framing-of-the-problem&quot;&gt;Framing of the Problem&lt;/h2&gt;
+
+&lt;p&gt;Before we get into the solution, let’s take a step back and look at the problem we are trying to solve in the context of deep learning. As we saw last week, we are given a 3D tensor of shape (12, 64, 64) as input, and we are trying to predict a 2D tensor of shape (64, 64) as output, which is our next day fire mask. We can think of this as a segmentation problem, where the task is classification of each output pixel as either 0 or 1, where 0 means no fire and 1 means fire. So how do we know how good the prediction is? Two common metrics for segmentation tasks are the &lt;a href=&quot;https://en.wikipedia.org/wiki/S%C3%B8rensen%E2%80%93Dice_coefficient&quot;&gt;Dice coefficient&lt;/a&gt; and the &lt;a href=&quot;https://en.wikipedia.org/wiki/Jaccard_index&quot;&gt;Jaccard index&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Given two sets X and Y, Dice coefficient is defined as:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/dice_coefficient.png&quot; alt=&quot;dice_coefficient&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Whereas similarly, the Jaccard index is defined as:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/jaccard_index.png&quot; alt=&quot;jaccard_index&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In the context of our fire spread prediction, we can think of the ground truth fire mask as a set of pixels A and the predicted fire mask as a set of pixels B. Then, the Dice coefficient and Jaccard index can be used to evaluate the accuracy of the prediction. The higher the value, the better the prediction.&lt;/p&gt;
+
+&lt;h2 id=&quot;unet&quot;&gt;Unet&lt;/h2&gt;
+
+&lt;p&gt;Unet is a simple yet powerful architecture originally developed for biomedical imaging segmentation tasks. It is composed of an encoder and a decoder, where the encoder is a series of convolutional layers that downsample the input, and the decoder is a series of convolutional layers that upsample the input. The encoder and decoder are connected by skip connections, which allow the decoder to use information from the encoder to improve the segmentation results. The architecture is shown below:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/u-net-architecture.png&quot; alt=&quot;unet_image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Using this network allows us to get some initial results relatively fast to get a handle on the problem of predicting wildfire spread, and if the results are promising, we can then explore more sophisticated architectures.&lt;/p&gt;
+
+&lt;h2 id=&quot;baseline-results&quot;&gt;Baseline Results&lt;/h2&gt;
+
+&lt;p&gt;Due to the large size of the dataset and limited GPU resources, we downsampled the dataset from 64x64 to 32x32 and only used the 3 most important dimensions discovered in the original dataset paper: previous day fire mask, vegetation, and elevation. For the loss function, we used binary cross entropy with a positive weight of 100 to account for the imbalance between fire and no fire pixels, and for the optimizer, we used the default Unet scheduler with a learning rate of 1e-5.&lt;/p&gt;
+
+&lt;p&gt;The model was trained on an A800-80G GPU for 10 epochs, and we obtained the following results:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/train_loss_unet.png&quot; alt=&quot;train_loss_unet&quot; /&gt;
+&lt;img src=&quot;/images/validation_unet.png&quot; alt=&quot;validation_unet&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As shown here in the results, we can see that unfortunately the dice score is plateauing at around 0.18, which is not very good. There are a few possible explanations, including the fact that the model is too simple, or the problem is not framed correctly. We will explore these possibilities in the next few weeks.&lt;/p&gt;
+
+&lt;h2 id=&quot;next-steps&quot;&gt;Next Steps&lt;/h2&gt;
+
+&lt;p&gt;Next week, we will be exploring the possibility of:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Preprocessing in different ways the input and target labels to improve the results, for example, by using a different representation of the target labels including using the change in fire rather than fire/no fire. Another idea is to only predict the surrounding the current fire perimeter rather than the entire image, mentioned in the &lt;a href=&quot;https://www.ijcai.org/proceedings/2019/636&quot;&gt;FireCast paper&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;Applying a different loss function that may better reflect the nature of the problem by reviewing and trying out implementations &lt;a href=&quot;https://github.com/shruti-jadon/Semantic-Segmentation-Loss-Functions&quot;&gt;here&lt;/a&gt;.&lt;/li&gt;
+&lt;/ol&gt;</content><author><name></name></author><summary type="html">Now that we have our dataset ready, it is time to obtain some baseline results with the goal of 1/ evaluate the difficulty of the problem and 2/ determine if the problem is framed correctly. With that in mind, we will be using the Unet architecture as the starting architecture for this segmentation task.</summary></entry><entry><title type="html">Week 2 | Finding the Right Dataset</title><link href="http://localhost:4000/week2/" rel="alternate" type="text/html" title="Week 2 | Finding the Right Dataset" /><published>2023-09-18T00:00:00-07:00</published><updated>2023-09-18T00:00:00-07:00</updated><id>http://localhost:4000/week2</id><content type="html" xml:base="http://localhost:4000/week2/">&lt;p&gt;This week, we will dive into the first step of the project: finding the right dataset. We will discuss the problem, potential solutions, and the dataset we will use for the project.&lt;/p&gt;
+
+&lt;p&gt;For the first phase of the project, we focus on short-term predictions of wildfires. Concretely, this means that we will be predicting the spread of a wildfire, which is a critical task and a difficult problem where there can be many different approaches. However, solving this issue will contribute significantly to land management and fire disaster response efforts, providing useful insights for both emergency teams and individuals that may be in the vicinity of high risk areas.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-dataset-we-will-use&quot;&gt;The Dataset We Will Use&lt;/h2&gt;
+&lt;p&gt;The next day wildfire dataset is a comprehensive compilation of wildfire data from the United States based on Google earth data from 2012 to 2020. It contains 2D information about 12 relevant variables including vegetation, elevation, weather, fire map at t day and fire mask at t+1 day. This dataset has the potential as a benchmark dataset for fire propagation prediction, while there have been few studies on this particular topic. The dataset is publicly available &lt;a href=&quot;https://www.kaggle.com/datasets/fantineh/next-day-wildfire-spread&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Looking closer at the dataset this week, we were able to identify the specific shapes of the input and output:&lt;/p&gt;
+
+&lt;p&gt;The input is a 3D tensor of shape (12, 64, 64), where the first dimension represents the 12 variables relevant to fire spread, the second and third dimensions represent the 64x64 grid of the area of interest. The output is a 2D tensor of shape (64, 64), where each pixel represents the presence of fire at that location.&lt;/p&gt;
+
+&lt;p&gt;The visualization below is an example of the input and output for a given day, more details are available from the paper that introduced the dataset &lt;a href=&quot;https://arxiv.org/abs/2112.02447&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/data_vis.png&quot; alt=&quot;Input and Output&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;augmenting-the-dataset&quot;&gt;Augmenting the Dataset&lt;/h2&gt;
+
+&lt;p&gt;Due to the drastic increase in number and frequency of wildfires in the last few years, we decided to augment the next day wildfire dataset be expanding its time and location range. We will be using the same 12 variables as the original dataset, but we will be using data from 2012 to 2023, and we will be expanding the area of interest to the entire North America. This will allow us to train a model that can generalize to a more recent time period and a larger area, which will be more useful for real-world applications in the context of this project.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-problem&quot;&gt;The problem&lt;/h2&gt;
+
+&lt;p&gt;It is easy to see that the the prediction of the t+1 day fire mask can be framed as a segmentation problem, where the task is classification of each output pixel as either 0 or 1, where 0 means no fire and 1 means fire. However, the input is not a simple image, but a 3D tensor of shape (12, 64, 64). This means that we will need to find a way to transform the input into a 2D image, which we can then use to train a segmentation model.&lt;/p&gt;
+
+&lt;h2 id=&quot;potential-solutions&quot;&gt;Potential Solutions&lt;/h2&gt;
+
+&lt;p&gt;There are a number of potential solutions to this problem, and the original paper for this dataset explores a few of them, including employing both CNN based methods and LSTM based methods as well as using classical machine learning like random forests. While having results from these methods is useful, more sophisticated DNN architectures have not been used on this dataset, and we will start with a simple &lt;a href=&quot;https://arxiv.org/abs/1505.04597&quot;&gt;U-Net&lt;/a&gt; to get a baseline for our project.&lt;/p&gt;</content><author><name></name></author><summary type="html">This week, we will dive into the first step of the project: finding the right dataset. We will discuss the problem, potential solutions, and the dataset we will use for the project.</summary></entry><entry><title type="html">Week 1 | What Can Machine Learning Do for Climate Change?</title><link href="http://localhost:4000/week1/" rel="alternate" type="text/html" title="Week 1 | What Can Machine Learning Do for Climate Change?" /><published>2023-09-11T00:00:00-07:00</published><updated>2023-09-11T00:00:00-07:00</updated><id>http://localhost:4000/week1</id><content type="html" xml:base="http://localhost:4000/week1/">&lt;p&gt;Climate change is one of the biggest challenges facing our world today. Rising global temperatures, shifting weather patterns, and more extreme weather events are already impacting communities worldwide. Machine learning, a type of artificial intelligence, offers new hope in the fight against climate change.&lt;/p&gt;
+
+&lt;p&gt;Machine learning algorithms can analyze massive datasets quickly to uncover hidden insights. This makes them uniquely suited to tackling the complexity of climate science, incorporating many different factors in making better predictions for future changes. In the exploration of how machine learning can be applied to tackle a specific problem, there are three main questions to consider:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;What is the problem we want to solve / needs to be solved?&lt;/li&gt;
+  &lt;li&gt;What is the data available / what kinds of data should be applied?&lt;/li&gt;
+  &lt;li&gt;What is the solution?&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;One way machine learning is being applied is in predicting and managing wildfires. Wildfires are increasing in frequency and severity due to hotter, drier conditions. Computer vision algorithms can analyze satellite imagery to identify areas at highest risk of wildfires. This allows fire officials to proactively allocate resources and better plan controlled burns. For example, we can estimate the spread of the fire in the short term, which helps authorities safely evacuate residents in the fire’s path. After fires, machine learning can help assess damage to man-made structures and environmental assets. This information guides recovery and restoration efforts. Machine learning can even identify ways to improve infrastructure design to be more resilient to future fires.&lt;/p&gt;
+
+&lt;p&gt;My current project focuses on developing machine learning models for wildfire modeling here in North America.  By training algorithms on satellite imagery and data like vegetation, wind direction, etc., we hope to better understand wildfire behavior in the short term, and its impact on marginalized communities in the long term. This will arm officials with science-based, insights to help our community adapt to our hotter, drier future. Machine learning offers data-driven solutions to curb the impacts of climate change and help mitigate risks to the most vulnerable populations.&lt;/p&gt;</content><author><name></name></author><summary type="html">Climate change is one of the biggest challenges facing our world today. Rising global temperatures, shifting weather patterns, and more extreme weather events are already impacting communities worldwide. Machine learning, a type of artificial intelligence, offers new hope in the fight against climate change.</summary></entry></feed>
