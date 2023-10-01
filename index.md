@@ -1,6 +1,6 @@
 ---
 layout: default
-title: DREAM 2023 | Improving Wildfire Prediction and Vegetation Recovery Modeling with Explainable AI
+title: DREAM 2023 | Improving Wildfire Spread Prediction and Modeling Impact on Marginalized Communities with Explainable AI
 ---
 
 * TOC
