@@ -1,4 +1,137 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-10-01T11:51:23-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Improving Wildfire Prediction and Vegetation Recovery Modeling with Explainable AI</title><subtitle>This is the project site for wildfire modeling by Bronte Sihan Li, MLS(ASCP). You can find project descriptions, documentation and useful links here. This site will be continuously updated throughout the duration of the project.</subtitle><entry><title type="html">Week 3 | Unet and Baseline Results</title><link href="http://localhost:4000/week3/" rel="alternate" type="text/html" title="Week 3 | Unet and Baseline Results" /><published>2023-09-25T00:00:00-07:00</published><updated>2023-09-25T00:00:00-07:00</updated><id>http://localhost:4000/week3</id><content type="html" xml:base="http://localhost:4000/week3/">&lt;p&gt;Now that we have our dataset ready, it is time to obtain some baseline results with the goal of 1/ evaluate the difficulty of the problem and 2/ determine if the problem is framed correctly. With that in mind, we will be using the Unet architecture as the starting architecture for this segmentation task.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-10-15T17:50:59-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">FireSight - AI Insight on Wildfire Impact</title><subtitle>DREAM 2023 | Improving Wildfire Spread Prediction and Modeling Impact on Marginalized Communities with Explainable AI</subtitle><entry><title type="html">Week 5 | New Baseline Results</title><link href="http://localhost:4000/week5/" rel="alternate" type="text/html" title="Week 5 | New Baseline Results" /><published>2023-10-14T00:00:00-07:00</published><updated>2023-10-14T00:00:00-07:00</updated><id>http://localhost:4000/week5</id><content type="html" xml:base="http://localhost:4000/week5/">&lt;p&gt;With the results from last week, it was clear that we were not approaching the problem correctly. For example, through examining the fire mask prediction results from the trained UNet model, we discovered that by using a loss function that was a combination of binary cross entropy and dice loss, the model was not able to predict the fire masks correctly - in fact, the model was not predicting any positive fire pixels at all. This week, we will present results from training the model using only the weighted binary cross entropy loss function.&lt;/p&gt;
+
+&lt;h2 id=&quot;identifying-the-issue&quot;&gt;Identifying the Issue&lt;/h2&gt;
+
+&lt;p&gt;From the previous week, we saw that the model was not predicting any positive fire pixels. Through some investigation, we hypothesized that this could be due to the loss function being not appropriate for this particular problem. To test this hypothesis, we decided to train the model using only the weighted binary cross entropy loss function, and use the same metrics as the original paper to evaluate the model so that we have a better reference point.&lt;/p&gt;
+
+&lt;h2 id=&quot;results&quot;&gt;Results&lt;/h2&gt;
+
+&lt;p&gt;The training results for Unet and the model details are as follows:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Checkpoint/Description&lt;/th&gt;
+      &lt;th&gt;Dice Score&lt;/th&gt;
+      &lt;th&gt;PR AUC&lt;/th&gt;
+      &lt;th&gt;Precision&lt;/th&gt;
+      &lt;th&gt;Recall&lt;/th&gt;
+      &lt;th&gt;Weighted F1&lt;/th&gt;
+      &lt;th&gt;Benchmark PR AUC&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Epoch 7, BCE loss with pos_weight=3, pos threshold 0.6&lt;/td&gt;
+      &lt;td&gt;0.33&lt;/td&gt;
+      &lt;td&gt;0.293&lt;/td&gt;
+      &lt;td&gt;0.41&lt;/td&gt;
+      &lt;td&gt;0.22&lt;/td&gt;
+      &lt;td&gt;0.28&lt;/td&gt;
+      &lt;td&gt;0.284&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Epoch 7, BCE loss with pos_weight=3, pos threshold 0.5&lt;/td&gt;
+      &lt;td&gt;0.31&lt;/td&gt;
+      &lt;td&gt;0.293&lt;/td&gt;
+      &lt;td&gt;0.34&lt;/td&gt;
+      &lt;td&gt;0.37&lt;/td&gt;
+      &lt;td&gt;0.34&lt;/td&gt;
+      &lt;td&gt;0.284&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Epoch 7, BCE loss with pos_weight=3, pos threshold 0.4&lt;/td&gt;
+      &lt;td&gt;0.29&lt;/td&gt;
+      &lt;td&gt;0.293&lt;/td&gt;
+      &lt;td&gt;0.28&lt;/td&gt;
+      &lt;td&gt;0.50&lt;/td&gt;
+      &lt;td&gt;0.35&lt;/td&gt;
+      &lt;td&gt;0.284&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Epoch 3, BCE loss with pos_weight=100, pos threshold 0.5&lt;/td&gt;
+      &lt;td&gt;0.17&lt;/td&gt;
+      &lt;td&gt;0.20&lt;/td&gt;
+      &lt;td&gt;0.11&lt;/td&gt;
+      &lt;td&gt;0.79&lt;/td&gt;
+      &lt;td&gt;0.19&lt;/td&gt;
+      &lt;td&gt;0.284&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;We can see that by using a more appropriate loss function, not only were we able to predict positive fire pixels, but we were also able to achieve a PR AUC score of 0.293, which is slightly higher than the benchmark PR AUC score of 0.284.&lt;/p&gt;
+
+&lt;p&gt;Some example predictions:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Predicted Fire Mask&lt;/th&gt;
+      &lt;th&gt;True Fire Mask&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;img src=&quot;/images/week5_results/14_pred.png&quot; alt=&quot;14_prediction&quot; /&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;img src=&quot;/images/week5_results/14_true.png&quot; alt=&quot;14_true&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;img src=&quot;/images/week5_results/15_pred.png&quot; alt=&quot;15_prediction&quot; /&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;img src=&quot;/images/week5_results/15_true.png&quot; alt=&quot;15_true&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;img src=&quot;/images/week5_results/29_pred.png&quot; alt=&quot;29_prediction&quot; /&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;img src=&quot;/images/week5_results/29_true.png&quot; alt=&quot;29_true&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;img src=&quot;/images/week5_results/114_pred.png&quot; alt=&quot;114_prediction&quot; /&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;img src=&quot;/images/week5_results/114_true.png&quot; alt=&quot;114_true&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;whats-next&quot;&gt;What’s Next&lt;/h2&gt;
+
+&lt;p&gt;This is exciting progress as we were able to get a higher PR-AUC than the original methods in the &lt;a href=&quot;https://arxiv.org/abs/2112.02447&quot;&gt;Next Day Wildfire paper&lt;/a&gt;. To further improve the results and extract additional potential from the UNet architecture, we will try the following:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Add batch norm or layer norm&lt;/li&gt;
+  &lt;li&gt;Add more features as input&lt;/li&gt;
+  &lt;li&gt;Try different loss functions&lt;/li&gt;
+  &lt;li&gt;Increase width of Unet by increasing number of kernels in each block&lt;/li&gt;
+  &lt;li&gt;Increase depth of Unet by adding more pairs of encoder/decoder blocks&lt;/li&gt;
+  &lt;li&gt;Try augmenting the Unet with &lt;a href=&quot;https://github.com/sheikhazhanmohammed/sadma&quot;&gt;this paper&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Try different architectures&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Photo by &lt;a href=&quot;https://unsplash.com/@pavement_special?utm_content=creditCopyText&amp;amp;utm_medium=referral&amp;amp;utm_source=unsplash&quot;&gt;Riccardo Annandale&lt;/a&gt; on &lt;a href=&quot;https://unsplash.com/photos/7e2pe9wjL9M?utm_content=creditCopyText&amp;amp;utm_medium=referral&amp;amp;utm_source=unsplash&quot;&gt;Unsplash&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="Wildfire" /><category term="Deep Learning" /><category term="machine learning" /><category term="AI" /><summary type="html">With the results from last week, it was clear that we were not approaching the problem correctly. For example, through examining the fire mask prediction results from the trained UNet model, we discovered that by using a loss function that was a combination of binary cross entropy and dice loss, the model was not able to predict the fire masks correctly - in fact, the model was not predicting any positive fire pixels at all. This week, we will present results from training the model using only the weighted binary cross entropy loss function.</summary></entry><entry><title type="html">Week 4 | Metrics and Loss Functions</title><link href="http://localhost:4000/week4/" rel="alternate" type="text/html" title="Week 4 | Metrics and Loss Functions" /><published>2023-10-02T00:00:00-07:00</published><updated>2023-10-02T00:00:00-07:00</updated><id>http://localhost:4000/week4</id><content type="html" xml:base="http://localhost:4000/week4/">&lt;p&gt;With the results from last week, it was clear that we were not approaching the problem correctly. For example, through examining the fire mask prediction results from the trained UNet model, we discovered that by using a loss function that was a combination of binary cross entropy and dice loss, the model was not able to predict the fire masks correctly - in fact, the model was not predicting any positive fire pixels at all. This week, we will dig further into the losses and metrics used by the original next day wild fire paper and train our model using the same losses and metrics on the dataset.&lt;/p&gt;
+
+&lt;h2 id=&quot;challenges-of-the-problem&quot;&gt;Challenges of the Problem&lt;/h2&gt;
+
+&lt;p&gt;Looking at the problem of predicting next day wildfire again, it is clear that this is not a typical segmentation problem. The main challenge of this problem is that the fire pixels are very sparse in the image. In fact, the fire pixels only make up about 1% of the image. This means that the model will be trained on a dataset that is very imbalanced. This is a problem because the model will be trained to predict the majority class (non-fire pixels) and will not be able to predict the minority class (fire pixels) well.&lt;/p&gt;
+
+&lt;h2 id=&quot;weighted-binary-cross-entropy&quot;&gt;Weighted Binary Cross Entropy&lt;/h2&gt;
+
+&lt;p&gt;Cross entropy is a loss function that is used to measure the performance of a classification model whose output is a probability value between 0 and 1. The loss function is commonly used in machine learning and deep learning models, as the following:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/cross_entropy.webp&quot; alt=&quot;Cross Entropy&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;After applying an activation function of either sigmoid or softmax, for each class in the output, the cross entropy loss is calculated. The loss is then summed up for all classes and averaged over all samples. The loss function is then minimized by the model during training.&lt;/p&gt;
+
+&lt;p&gt;For our problem of predicting next day fire, we can think of using binary cross entropy to classify at each location on the map the probability of a fire. However, because we have a serious imbalance between the number of positive and negative samples, we need to weight the loss function to account for this imbalance. We can do this by assigning a weight to each class. The weight for the positive class is the inverse of the proportion of positive samples in the dataset, and the weight for the negative class is the inverse of the proportion of negative samples in the dataset. This way, the loss function will be weighted more towards the positive class, and the model will be trained to predict the positive class better. This means that for the next round of experiments, we will be using a weighted binary cross entropy as our only loss function to train our model.&lt;/p&gt;
+
+&lt;h2 id=&quot;auc-precision-and-recall&quot;&gt;AUC, Precision and Recall&lt;/h2&gt;
+
+&lt;p&gt;In addition to the weighted binary cross entropy loss function, we will also be using the AUC, precision and recall metrics to evaluate our model. The AUC metric is the area under the ROC curve, which is a plot of the true positive rate (TPR) against the false positive rate (FPR). The TPR is the proportion of positive samples that are correctly identified as positive, and the FPR is the proportion of negative samples that are incorrectly identified as positive.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/metrics.jpg&quot; alt=&quot;Metrics&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/roc_curve.svg&quot; alt=&quot;ROC Curve&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;For more information on the ROC curve, see &lt;a href=&quot;https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc&quot;&gt;here&lt;/a&gt; and &lt;a href=&quot;https://www.sciencedirect.com/science/article/pii/S016786550500303X#sec4&quot;&gt;here&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Photo by &lt;a href=&quot;https://unsplash.com/@lazycreekimages?utm_content=creditCopyText&amp;amp;utm_medium=referral&amp;amp;utm_source=unsplash&quot;&gt;Michael Dziedzic&lt;/a&gt; on &lt;a href=&quot;https://unsplash.com/photos/dSyhpTGhNHg?utm_content=creditCopyText&amp;amp;utm_medium=referral&amp;amp;utm_source=unsplash&quot;&gt;Unsplash&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="Wildfire" /><category term="Deep Learning" /><category term="machine learning" /><category term="AI" /><summary type="html">With the results from last week, it was clear that we were not approaching the problem correctly. For example, through examining the fire mask prediction results from the trained UNet model, we discovered that by using a loss function that was a combination of binary cross entropy and dice loss, the model was not able to predict the fire masks correctly - in fact, the model was not predicting any positive fire pixels at all. This week, we will dig further into the losses and metrics used by the original next day wild fire paper and train our model using the same losses and metrics on the dataset.</summary></entry><entry><title type="html">Week 3 | Unet and Baseline Results</title><link href="http://localhost:4000/week3/" rel="alternate" type="text/html" title="Week 3 | Unet and Baseline Results" /><published>2023-09-25T00:00:00-07:00</published><updated>2023-09-25T00:00:00-07:00</updated><id>http://localhost:4000/week3</id><content type="html" xml:base="http://localhost:4000/week3/">&lt;p&gt;Now that we have our dataset ready, it is time to obtain some baseline results with the goal of 1/ evaluate the difficulty of the problem and 2/ determine if the problem is framed correctly. With that in mind, we will be using the Unet architecture as the starting architecture for this segmentation task.&lt;/p&gt;
 
 &lt;h2 id=&quot;framing-of-the-problem&quot;&gt;Framing of the Problem&lt;/h2&gt;
 
@@ -40,7 +173,9 @@
 &lt;ol&gt;
   &lt;li&gt;Preprocessing in different ways the input and target labels to improve the results, for example, by using a different representation of the target labels including using the change in fire rather than fire/no fire. Another idea is to only predict the surrounding the current fire perimeter rather than the entire image, mentioned in the &lt;a href=&quot;https://www.ijcai.org/proceedings/2019/636&quot;&gt;FireCast paper&lt;/a&gt;.&lt;/li&gt;
   &lt;li&gt;Applying a different loss function that may better reflect the nature of the problem by reviewing and trying out implementations &lt;a href=&quot;https://github.com/shruti-jadon/Semantic-Segmentation-Loss-Functions&quot;&gt;here&lt;/a&gt;.&lt;/li&gt;
-&lt;/ol&gt;</content><author><name></name></author><summary type="html">Now that we have our dataset ready, it is time to obtain some baseline results with the goal of 1/ evaluate the difficulty of the problem and 2/ determine if the problem is framed correctly. With that in mind, we will be using the Unet architecture as the starting architecture for this segmentation task.</summary></entry><entry><title type="html">Week 2 | Finding the Right Dataset</title><link href="http://localhost:4000/week2/" rel="alternate" type="text/html" title="Week 2 | Finding the Right Dataset" /><published>2023-09-18T00:00:00-07:00</published><updated>2023-09-18T00:00:00-07:00</updated><id>http://localhost:4000/week2</id><content type="html" xml:base="http://localhost:4000/week2/">&lt;p&gt;This week, we will dive into the first step of the project: finding the right dataset. We will discuss the problem, potential solutions, and the dataset we will use for the project.&lt;/p&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Photo by &lt;a href=&quot;https://unsplash.com/@urielsc26&quot;&gt;Uriel SC&lt;/a&gt; on &lt;a href=&quot;https://unsplash.com&quot;&gt;Unsplash&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="Wildfire" /><category term="Unet" /><category term="Deep Learning" /><category term="machine learning" /><category term="AI" /><summary type="html">Now that we have our dataset ready, it is time to obtain some baseline results with the goal of 1/ evaluate the difficulty of the problem and 2/ determine if the problem is framed correctly. With that in mind, we will be using the Unet architecture as the starting architecture for this segmentation task.</summary></entry><entry><title type="html">Week 2 | Finding the Right Dataset</title><link href="http://localhost:4000/week2/" rel="alternate" type="text/html" title="Week 2 | Finding the Right Dataset" /><published>2023-09-18T00:00:00-07:00</published><updated>2023-09-18T00:00:00-07:00</updated><id>http://localhost:4000/week2</id><content type="html" xml:base="http://localhost:4000/week2/">&lt;p&gt;This week, we will dive into the first step of the project: finding the right dataset. We will discuss the problem, potential solutions, and the dataset we will use for the project.&lt;/p&gt;
 
 &lt;p&gt;For the first phase of the project, we focus on short-term predictions of wildfires. Concretely, this means that we will be predicting the spread of a wildfire, which is a critical task and a difficult problem where there can be many different approaches. However, solving this issue will contribute significantly to land management and fire disaster response efforts, providing useful insights for both emergency teams and individuals that may be in the vicinity of high risk areas.&lt;/p&gt;
 
@@ -65,7 +200,9 @@
 
 &lt;h2 id=&quot;potential-solutions&quot;&gt;Potential Solutions&lt;/h2&gt;
 
-&lt;p&gt;There are a number of potential solutions to this problem, and the original paper for this dataset explores a few of them, including employing both CNN based methods and LSTM based methods as well as using classical machine learning like random forests. While having results from these methods is useful, more sophisticated DNN architectures have not been used on this dataset, and we will start with a simple &lt;a href=&quot;https://arxiv.org/abs/1505.04597&quot;&gt;U-Net&lt;/a&gt; to get a baseline for our project.&lt;/p&gt;</content><author><name></name></author><summary type="html">This week, we will dive into the first step of the project: finding the right dataset. We will discuss the problem, potential solutions, and the dataset we will use for the project.</summary></entry><entry><title type="html">Week 1 | What Can Machine Learning Do for Climate Change?</title><link href="http://localhost:4000/week1/" rel="alternate" type="text/html" title="Week 1 | What Can Machine Learning Do for Climate Change?" /><published>2023-09-11T00:00:00-07:00</published><updated>2023-09-11T00:00:00-07:00</updated><id>http://localhost:4000/week1</id><content type="html" xml:base="http://localhost:4000/week1/">&lt;p&gt;Climate change is one of the biggest challenges facing our world today. Rising global temperatures, shifting weather patterns, and more extreme weather events are already impacting communities worldwide. Machine learning, a type of artificial intelligence, offers new hope in the fight against climate change.&lt;/p&gt;
+&lt;p&gt;There are a number of potential solutions to this problem, and the original paper for this dataset explores a few of them, including employing both CNN based methods and LSTM based methods as well as using classical machine learning like random forests. While having results from these methods is useful, more sophisticated DNN architectures have not been used on this dataset, and we will start with a simple &lt;a href=&quot;https://arxiv.org/abs/1505.04597&quot;&gt;U-Net&lt;/a&gt; to get a baseline for our project.&lt;/p&gt;
+
+&lt;p&gt;Photo by &lt;a href=&quot;https://unsplash.com/@nasa&quot;&gt;NASA&lt;/a&gt; on &lt;a href=&quot;https://unsplash.com/@nasa&quot;&gt;Unsplash&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="climate change" /><category term="machine learning" /><category term="AI" /><summary type="html">This week, we will dive into the first step of the project: finding the right dataset. We will discuss the problem, potential solutions, and the dataset we will use for the project.</summary></entry><entry><title type="html">Week 1 | What Can Machine Learning Do for Climate Change?</title><link href="http://localhost:4000/week1/" rel="alternate" type="text/html" title="Week 1 | What Can Machine Learning Do for Climate Change?" /><published>2023-09-11T00:00:00-07:00</published><updated>2023-09-11T00:00:00-07:00</updated><id>http://localhost:4000/week1</id><content type="html" xml:base="http://localhost:4000/week1/">&lt;p&gt;Climate change is one of the biggest challenges facing our world today. Rising global temperatures, shifting weather patterns, and more extreme weather events are already impacting communities worldwide. Machine learning, a type of artificial intelligence, offers new hope in the fight against climate change.&lt;/p&gt;
 
 &lt;p&gt;Machine learning algorithms can analyze massive datasets quickly to uncover hidden insights. This makes them uniquely suited to tackling the complexity of climate science, incorporating many different factors in making better predictions for future changes. In the exploration of how machine learning can be applied to tackle a specific problem, there are three main questions to consider:&lt;/p&gt;
 
@@ -77,4 +214,6 @@
 
 &lt;p&gt;One way machine learning is being applied is in predicting and managing wildfires. Wildfires are increasing in frequency and severity due to hotter, drier conditions. Computer vision algorithms can analyze satellite imagery to identify areas at highest risk of wildfires. This allows fire officials to proactively allocate resources and better plan controlled burns. For example, we can estimate the spread of the fire in the short term, which helps authorities safely evacuate residents in the fire’s path. After fires, machine learning can help assess damage to man-made structures and environmental assets. This information guides recovery and restoration efforts. Machine learning can even identify ways to improve infrastructure design to be more resilient to future fires.&lt;/p&gt;
 
-&lt;p&gt;My current project focuses on developing machine learning models for wildfire modeling here in North America.  By training algorithms on satellite imagery and data like vegetation, wind direction, etc., we hope to better understand wildfire behavior in the short term, and its impact on marginalized communities in the long term. This will arm officials with science-based, insights to help our community adapt to our hotter, drier future. Machine learning offers data-driven solutions to curb the impacts of climate change and help mitigate risks to the most vulnerable populations.&lt;/p&gt;</content><author><name></name></author><summary type="html">Climate change is one of the biggest challenges facing our world today. Rising global temperatures, shifting weather patterns, and more extreme weather events are already impacting communities worldwide. Machine learning, a type of artificial intelligence, offers new hope in the fight against climate change.</summary></entry></feed>
+&lt;p&gt;My current project focuses on developing machine learning models for wildfire modeling here in North America.  By training algorithms on satellite imagery and data like vegetation, wind direction, etc., we hope to better understand wildfire behavior in the short term, and its impact on marginalized communities in the long term. This will arm officials with science-based, insights to help our community adapt to our hotter, drier future. Machine learning offers data-driven solutions to curb the impacts of climate change and help mitigate risks to the most vulnerable populations.&lt;/p&gt;
+
+&lt;p&gt;Photo by &lt;a href=&quot;https://unsplash.com/@li_anlim&quot;&gt;Li-An Lim&lt;/a&gt; on &lt;a href=&quot;https://unsplash.com&quot;&gt;Unsplash&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="climate change" /><category term="machine learning" /><category term="AI" /><summary type="html">Climate change is one of the biggest challenges facing our world today. Rising global temperatures, shifting weather patterns, and more extreme weather events are already impacting communities worldwide. Machine learning, a type of artificial intelligence, offers new hope in the fight against climate change.</summary></entry></feed>
