@@ -10,8 +10,6 @@
   link: /wildfire-spread
   image: assets/images/project_map.jpeg
   description: 
-- name: Impact on Marginalized Communities
-  link:
-  image: assets/images/project_community.jpeg
-  description: 
-
+- name: Attention Swin U-net with Focal Modulation (ASUFM)
+  link: /asufm
+  image: assets/images/project_asufm.jpeg
