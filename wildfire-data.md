@@ -15,3 +15,4 @@ Due to the drastic increase in number and frequency of wildfires in the last few
 
 The figure above shows a sample of the data. The first row shows the 12 variables used in the dataset, and the second row shows the fire mask at t+1 day. The fire mask is a binary mask that indicates whether a pixel is on fire or not. The fire mask is the target variable that we will be predicting.
 
+<img src="images/table2_data_comparison.png" width=600>
