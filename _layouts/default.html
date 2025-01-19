@@ -1,42 +1,51 @@
----
-layout: compress
----
-
 <!DOCTYPE html>
-<html>
-{% include head.html %}
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>{{ site.title }}{% if page.title and page.title != "" %} &mdash; {{ page.title }}{% endif %}</title>
 
-<body>
-  {% include navbar.html %}
-  {% include showcase.html %}
-  {% include project.html %}
-  {% include about.html %}
-  {% include contact.html %}
-  <!--Footer begins here-->
-  {% include footer.html %}
-</body>
-<script>
-  var navItems = document.getElementsByClassName('navbar-item');
-  var heroes = document.getElementsByClassName('hero');
-  const viewOffset = 200; 
+    {% if site.description %}<meta name="description" content="{{ site.description }}">{% endif %}  
 
-  window.addEventListener("scroll", function (event) {
-    var scroll = this.scrollY;
-    var position = window.pageYOffset;
+    <link rel="stylesheet" href="{{ '/assets/css/main.css' | absolute_url }}?{{ site.time | date: '%s%N' }}">
 
-    for (var i = 0; i < navItems.length; i++) {
-      navItems[i].classList.remove('is-active');
-    }
+    <link rel="apple-touch-icon" href="{{ site.icon }}">
 
-    for (var i = 0; i < heroes.length; i++) {
-        var sectionTop = heroes[i].offsetTop-viewOffset;
-        var sectionBottom = heroes[i].offsetTop + heroes[i].offsetHeight-viewOffset;
+    {%- if jekyll.environment == 'production' and site.google_analytics -%}
+      {%- include google-analytics.html -%}
+    {%- endif -%}
 
-        if (scroll >= sectionTop && scroll < sectionBottom) {
-          navItems[i+1].classList.add('is-active');
-      }
-    }
-  });
-</script>
+  </head>
+  <body>
 
+    {% if page.layout == 'home' %}
+      <a href="#main" class="skip-navigation">
+        Skip to list of posts
+      </a>
+    {% else %}
+      <a href="#main" class="skip-navigation">
+        Skip to content
+      </a>
+    {% endif %}
+
+    {{ content }}
+
+    {% unless site.hide_search %}
+      {% include search.html %}
+    {% endunless %}
+
+    {% include menu.html %}
+
+    {% unless site.hide_credits %}
+      <aside class="site-credits">
+        <p>
+          <small><a href="https://github.com/patdryburgh/hitchens">Hitchens Theme</a> powered by <a href="http://jekyllrb.com">Jekyll</a></small>
+        </p>
+      </aside>
+    {% endunless %}
+
+  </body>
 </html>
