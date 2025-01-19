@@ -15,6 +15,7 @@ I appreciate information delivered in simple and effective formats.
 ---
 
 I can be reached at me<<at>>bronteli.com.
+Find me on LinkedIn [here](https://www.linkedin.com/in/brontesihanli/).
 
 <figure>
   <img alt="Bronte" src="assets/images/bronte.JPG" />
